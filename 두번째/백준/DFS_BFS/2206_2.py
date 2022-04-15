@@ -1,56 +1,49 @@
 import sys
-import copy
 from collections import deque
 
 input=sys.stdin.readline
 n,m=map(int,input().split())
 graph=[[] for _ in range(n)]
-state=[[0]*m for _ in range(n)]
+visited=[[[0]*m for _ in range(n)] for _ in range(2)]
 q=deque()
-def pr(a):
-    for i in range(n):
-        for j in range(m):
-            print(a[i][j],end=" ")
-        print()
-    print()
-for i in range(n):
-        li=list(input())
-        for j in range(m):
-            graph[i].append(int(li[j]))
-
 dx=[-1,1,0,0]
 dy=[0,0,-1,1]
-def solution(x,y):
-    array=[[0]*m for _ in range(n)]
-    for i in range(n):
-        for j in range(m):
-            array[i][j]=graph[i][j]
-    array[x][y]=0
-    array[0][0]=-1
+
+def pr(graph):
+    for i in graph:
+        for j in i:
+            for h in j:
+                print(h,end=" ")
+            print()
+        print()
+    print()
+
+for i in range(n):
+    li=list(input())
+    for j in range(m):
+        graph[i].append(int(li[j]))
+
+def bfs():
+    visited[0][0][0]=1
     q.append((0,0,0))
+
     while q:
-        now=q.popleft()
-        print(now)
+        w,x,y=q.popleft()
+        if x==n-1 and y==m-1:
+            return visited[w][x][y]
+
         for i in range(4):
-            nx=now[0]+dx[i]
-            ny=now[1]+dy[i]
-            v=now[2]
+            nx=x+dx[i]
+            ny=y+dy[i]
             if not 0<=nx<n or not 0<=ny<m:
                 continue
-            if array[nx][ny]==1 and now[2]==0:
-                array[nx][ny]=0
-                state[nx][ny]=1
-                v=1
-            if array[nx][ny]==0:
-                array[nx][ny]=array[now[0]][now[1]]-1
-                q.append((nx,ny,v))
-        pr(array)
-    return -array[n-1][m-1]
+            if graph[nx][ny]==1 and w==0:
+                visited[1][nx][ny]=visited[w][x][y]+1
+                q.append((1,nx,ny))
+            elif graph[nx][ny]==0 and visited[w][nx][ny]==0:
+                visited[w][nx][ny]=visited[w][x][y]+1
+                q.append((w,nx,ny))
+    return -1
 
-
-result=solution(0,0)
-
-if result==0:
-    print(-1)
-else:
-    print(result)
+print(bfs())
+pr(visited)
