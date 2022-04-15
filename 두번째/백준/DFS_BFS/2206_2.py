@@ -46,4 +46,3 @@ def bfs():
     return -1
 
 print(bfs())
-pr(visited)
