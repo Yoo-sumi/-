@@ -39,3 +39,6 @@ def solution(new_id):
 
 
     return s
+
+
+print(round(63.5))
