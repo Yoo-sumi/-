@@ -1,4 +1,4 @@
-def solution(phone_book):
+ㅂdef solution(phone_book):
     answer=True
     dic={}
     for i in phone_book:
