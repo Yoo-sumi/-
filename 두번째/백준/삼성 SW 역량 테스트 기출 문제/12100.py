@@ -20,7 +20,7 @@ def left(arr):
             if len(stack[i])>0:
                 if stack[i][-1][0]==arr[i][j] and stack[i][-1][1]==0:
                     stack[i].pop()
-                    stack[i].append((arr[i][j],1))
+                    stack[i].append((arr[i][j]*2,1))
                     continue
             stack[i].append((arr[i][j],0))
     for i in range(n):
@@ -117,5 +117,3 @@ while q:
     result=max(result,maxx)
 
 print(result)
-
-
