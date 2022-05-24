@@ -11,6 +11,7 @@ for i in range(n):
         if index>=n-1:
             result+=1
             break
+
         if graph[i][index]==graph[i][index+1]:
             index+=1
             continue
@@ -19,27 +20,26 @@ for i in range(n):
             break
         #up
         if graph[i][index]==graph[i][index+1]-1:
-            count=1
-            for h in range(index-1,index-l,-1):
-                if h<0:
-                    break
+            count=0
+            for h in range(index,-1,-1):
                 if count==l:
                     break
-                if graph[i][h]!=graph[i][index]:
+                if graph[i][h]!=graph[i][index+1]-1:
                     break
                 count+=1
             if count!=l:
                 break
-            if h>0 and graph[i][h-1]!=graph[i][h+1]:
-                break
+            if index-l>=0:
+                if graph[i][index-l]-1==graph[i][index]:
+                    break
             index+=1
         #down
         elif graph[i][index]==graph[i][index+1]+1:
             count=0
-            for h in range(index+2,n):
+            for h in range(index+1,n):
                 if count==l:
                     break
-                if graph[i][h]!=graph[i][index+1]:
+                if graph[i][h]!=graph[i][index]-1:
                     break
                 count+=1
             if count!=l:
@@ -50,6 +50,7 @@ for i in range(n):
         if index>=n-1:
             result+=1
             break
+
         if graph[index][i]==graph[index+1][i]:
             index+=1
             continue
@@ -58,30 +59,30 @@ for i in range(n):
             break
         #up
         if graph[index][i]==graph[index+1][i]-1:
-            count=1
-            for h in range(index-1,index-l,-1):
-                if h<0:
-                    break
+            count=0
+            for h in range(index,-1,-1):
                 if count==l:
                     break
-                if graph[h][i]!=graph[index][i]:
+                if graph[h][i]!=graph[index+1][i]-1:
                     break
                 count+=1
             if count!=l:
                 break
-            if h>0 and graph[h-1][i]!=graph[h+1][i]:
-                break
+            if index-l>=0:
+                if graph[index-l][i]-1==graph[index][i]:
+                    break
             index+=1
         #down
         elif graph[index][i]==graph[index+1][i]+1:
-            count=1
-            for h in range(index+2,n):
+            count=0
+            for h in range(index+1,n):
                 if count==l:
                     break
-                if graph[h][i]!=graph[index+1][i]:
+                if graph[h][i]!=graph[index][i]-1:
                     break
                 count+=1
             if count!=l:
                 break
             index+=l
+
 print(result)
