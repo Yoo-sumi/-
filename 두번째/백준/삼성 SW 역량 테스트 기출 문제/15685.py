@@ -1,9 +1,8 @@
-import math
 n=int(input())
 result=[]
 graph=[[0]*101 for _ in range(101)]
 array=[]
-def paint(start,g):
+def paint(g):
     global array
     for c in range(g):
         far=array[-1]
@@ -50,7 +49,7 @@ for i in range(n):
         continue
     array.append((x,y))
     array.append((nx,ny))
-    arr=paint((x,y),g)
+    arr=paint(g)
     for j in arr:
         if not j in result:
             result.append(j)
