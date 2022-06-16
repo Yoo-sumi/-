@@ -33,6 +33,5 @@ def dfs(arr,row,col):
     dfs(arr,nrow2,ncol2)
 
 def solution(arr):
-    answer =[]
     dfs(arr,(0,len(arr)),(0,len(arr)))
     return [zero,one]
