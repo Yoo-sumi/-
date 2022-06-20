@@ -1,94 +1,72 @@
-from collections import deque
-n=int(input())
-graph=[[] for _ in range(n)]
-q=deque()
-dx=[-1,1,0,0]
-dy=[0,0,-1,1]
-flag=[]
-count=0
-age=9
-for i in range(n):
-    li=list(map(int,input().split()))
-    for j in range(len(li)):
-        if li[j]==9:
-            q.append((i,j))
-            flag.append((i,j))
-        if 1<=li[j]<=6:
-            count+=1
-    graph[i]=li
-time=0
-graph[q[0][0]][q[0][1]]=0
-while q:
+def solution():
+    n=int(input())
+    arr=[]
+    shark_x,shark_y=-1,-1
+    shark_age=2
+    fish=[]
+    time=0
+    dx=[-1,0,1,0]
+    dy=[0,-1,0,1]
     for i in range(n):
+        li=list(map(int,input().split()))
         for j in range(n):
-            print(graph[i][j],end=" ")
-        print()
-    print()
-    x,y=q.popleft()
-    if 1<=graph[x][y]<=6:
-        count-=1
-    print(x,y)
-    eat_arr=[]
-    same_arr=[]
-    zero_arr=[]
-    same_count=0
-    for i in range(4):
-        nx=x+dx[i]
-        ny=y+dy[i]
-        if not 0<=nx<n or not 0<=ny<n:
-            continue
-        if graph[nx][ny]>age:
-            continue
-        #eat
-        if graph[nx][ny]<age and graph[nx][ny]!=0:
-            eat_arr.append((abs(x-nx)+abs(y-ny),nx,ny))
-        #same
-        elif graph[nx][ny]==age:
-            same_arr.append((abs(x-nx)+abs(y-ny),nx,ny))
-        elif graph[nx][ny]==0:
-            zero_arr.append((abs(x-nx)+abs(y-ny),nx,ny))
-    eat_arr.sort(key=lambda x:(x[0],x[1],x[2]))
-    same_arr.sort(key=lambda x:(x[0],x[1],x[2]))
-    print(eat_arr,same_arr,zero_arr)
-    if eat_arr:
-        f=False
-        for a in eat_arr:
-            if not (a[1],a[2]) in flag:
-                q.append((a[1],a[2]))
-                flag.append((a[1],a[2]))
-                if age==graph[a[1]][a[2]]:
-                    age+=1
-                graph[a[1]][a[2]]=0
-                time+=1
-                f=True
+            if li[j]==9:
+                shark_x,shark_y=i,j
+            elif 1<=li[j]<=6:
+                fish.append((i,j))
+        arr.append(li)
+    fish.sort(key=lambda x:(x[0],x[1]))
+    arr[shark_x][shark_y]=0
+    count=0
+    while fish:
+        print(shark_x,shark_y,shark_age,time)
+        for i in arr:
+            for j in i:
+                print(j,end=" ")
+            print()
+        x,y=-1,-1
+        min_value=n*n
+        for xx,yy in fish:
+            if arr[xx][yy]>=shark_age:
+                continue
+            dis=abs(shark_x-xx)+abs(shark_y-yy)
+            if dis<min_value:
+                min_value=dis
+                x,y=xx,yy
+        if (x,y)==(-1,-1):
+            break
+        q=[]
+        q.append((shark_x,shark_y,0,[]))
+        res=n*n
+        while q:
+            s_x,s_y,di,foot=q.pop(0)
+            if (s_x,s_y)==(x,y):
+                for h_x,h_y in foot:
+                    if 0<arr[h_x][h_y]<shark_age:
+                        arr[h_x][h_y]=0
+                        count+=1
+                        fish.remove((h_x,h_y))
+                    if count==shark_age:
+                        shark_age+=1
+                        count=0
+                res=di
                 break
-        if f:
-            continue
-    if same_arr:
-        f=False
-        for a in same_arr:
-            if not (a[1],a[2]) in flag:
-                q.append((a[1],a[2]))
-                flag.append((a[1],a[2]))
-                time+=1
-                f=True
-                break
-        if f:
-            continue
-    if count==0:
-        print(count)
-        break
-    if zero_arr:
-        f=False
-        for a in zero_arr:
-            if not (a[1],a[2]) in flag:
-                q.append((a[1],a[2]))
-                flag.append((a[1],a[2]))
-                time+=1
-                f=True
-                break
-        if f:
-            continue
-    if not eat_arr and not same_arr and not zero_arr:
-        break
-print(time)
+            for i in range(4):
+                nx=s_x+dx[i]
+                ny=s_y+dy[i]
+                if (nx,ny)==(shark_x,shark_y):
+                    continue
+                if not 0<=nx<n or not 0<=ny<n:
+                    continue
+                if arr[nx][ny]>shark_age:
+                    continue
+                if not (nx,ny) in foot:
+                    q.append((nx,ny,di+1,foot+[(nx,ny)]))
+        if res==n*n:
+            break
+        time+=res
+        shark_x,shark_y=x,y
+        arr[shark_x][shark_y]=0
+        print(arr)
+    return time
+print(solution())
