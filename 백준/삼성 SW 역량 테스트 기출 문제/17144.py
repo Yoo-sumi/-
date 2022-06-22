@@ -1,4 +1,6 @@
-import copy
+import sys
+input = sys.stdin.readline
+answer=0
 r,c,t=map(int,input().split())
 graph=[]
 robot=[]
@@ -19,41 +21,43 @@ for _ in range(t):
         for j in range(c):
             if graph[i][j]==0 or graph[i][j]==-1:
                 continue
-            count=0
-            for index in range(4):
-                nx=i+dx[index]
-                ny=j+dy[index]
-                if not 0<=nx<r or not 0<=ny<c:
-                    continue
-                if graph[nx][ny]==-1:
-                    continue
-                temp[nx][ny]+=graph[i][j]//5
-                count+=1
-            temp[i][j]+=graph[i][j]-(graph[i][j]//5)*count
-    graph=copy.deepcopy(temp)
+            if graph[i][j]>=5:
+                count=0
+                for index in range(4):
+                    nx=i+dx[index]
+                    ny=j+dy[index]
+                    if not 0<=nx<r or not 0<=ny<c:
+                        continue
+                    if graph[nx][ny]==-1:
+                        continue
+                    temp[nx][ny]+=graph[i][j]//5
+                    count+=1
+                temp[i][j]+=graph[i][j]-(graph[i][j]//5)*count
+    #graph=copy.deepcopy(temp)
+    for i in range(r):
+        for j in range(c):
+            graph[i][j]=temp[i][j]
 
     #왼쪽
     before=graph[0][0]
     for i in range(1,robot[0][0]+1):
+        if (robot[0][0],robot[0][1])==(i,0):
+            before=0
+            continue
         graph[i][0],before=before,graph[i][0]
-    print(graph)
     #아래
     for i in range(1,c):
         if robot[0][1]==i:
             before=0
             continue
         graph[robot[0][0]][i],before=before,graph[robot[0][0]][i]
-    print(graph)
     #오른쪽
     for i in range(robot[0][0]-1,-1,-1):
         graph[i][c-1],before=before,graph[i][c-1]
 
-    print(graph)
     #위쪽
     for i in range(c-2,-1,-1):
         graph[0][i],before= before,graph[0][i]
-
-    print(graph)
 
     #위
     before=graph[robot[1][0]+1][0]
@@ -62,21 +66,18 @@ for _ in range(t):
             before=0
             continue
         graph[robot[1][0]][i],before=before,graph[robot[1][0]][i]
-
-    print(graph)
     #오른
     for i in range(robot[1][0]+1,r):
         graph[i][c-1],before=before,graph[i][c-1]
-
-    print(graph)
     #아래
     for i in range(c-2,-1,-1):
         graph[r-1][i],before=before,graph[r-1][i]
-
-    print(graph)
     #왼쪽
     for i in range(r-2,robot[1][0]-1,-1):
+        if (robot[1][0],robot[1][1])==(i,0):
+            before=0
+            continue
         graph[i][0],before=before,graph[i][0]
-    print(graph)
-
-print(graph)
+for i in graph:
+    answer+=sum(i)
+print(answer+2)
